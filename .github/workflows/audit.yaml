@@ -3,9 +3,6 @@ name: Audit
 on:
   workflow_call:
     inputs:
-      website_url:
-        required: true
-        type: string
     secrets:
       client_id:
         required: true
@@ -15,11 +12,13 @@ on:
         required: true
       git_user_email:
         required: true
+      website_url:
+        required: true
 
 env:
   NEXT_PUBLIC_TINA_CLIENT_ID: ${{ secrets.client_id }}
   TINA_TOKEN: ${{ secrets.tina_token }}
-  NEXT_PUBLIC_WEBSITE_URL: ${{ inputs.website_url }}
+  NEXT_PUBLIC_WEBSITE_URL: ${{ secrets.website_url }}
   NEXT_PUBLIC_TINA_BRANCH: main
 
 concurrency:
