@@ -59,8 +59,8 @@ jobs:
 
       - name: Commit Changes
         run: |
-          git config user.name "${{ secrets.git_user_name }}"
-          git config user.email "${{ secrets.git_user_email }}"
+          git config user.name "${{ inputs.git_user_name }}"
+          git config user.email "${{ inputs.git_user_email }}"
           git add .
           git commit -m "Run Lighthouse CI & Update Sitemap"
           git push
