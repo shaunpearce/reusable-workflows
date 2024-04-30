@@ -14,7 +14,9 @@ on:
         type: string
     secrets:
       git_user_name:
+        required: true
       git_user_email:
+        required: true
 
 env:
   NEXT_PUBLIC_TINA_CLIENT_ID: ${{ inputs.client_id }}
