@@ -3,25 +3,22 @@ name: Audit
 on:
   workflow_call:
     inputs:
-      client_id:
-        required: true
-        type: string
-      tina_token:
-        required: true
-        type: string
       website_url:
         required: true
         type: string
+    secrets:
+      client_id:
+        required: true
+      tina_token:
+        required: true
       git_user_name:
         required: true
-        type: string
       git_user_email:
         required: true
-        type: string
 
 env:
-  NEXT_PUBLIC_TINA_CLIENT_ID: ${{ inputs.client_id }}
-  TINA_TOKEN: ${{ inputs.tina_token }}
+  NEXT_PUBLIC_TINA_CLIENT_ID: ${{ secrets.client_id }}
+  TINA_TOKEN: ${{ secrets.tina_token }}
   NEXT_PUBLIC_WEBSITE_URL: ${{ inputs.website_url }}
   NEXT_PUBLIC_TINA_BRANCH: main
 
@@ -59,8 +56,8 @@ jobs:
 
       - name: Commit Changes
         run: |
-          git config user.name "${{ inputs.git_user_name }}"
-          git config user.email "${{ inputs.git_user_email }}"
+          git config user.name "${{ secrets.git_user_name }}"
+          git config user.email "${{ secrets.git_user_email }}"
           git add .
           git commit -m "Run Lighthouse CI & Update Sitemap"
           git push
