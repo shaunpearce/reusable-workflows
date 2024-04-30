@@ -12,11 +12,12 @@ on:
       website_url:
         required: true
         type: string
-    secrets:
       git_user_name:
         required: true
+        type: string
       git_user_email:
         required: true
+        type: string
 
 env:
   NEXT_PUBLIC_TINA_CLIENT_ID: ${{ inputs.client_id }}
