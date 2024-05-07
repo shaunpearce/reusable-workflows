@@ -1,0 +1,68 @@
+# backup-psql.yaml
+name: Backup PostgreSQL Database
+on:
+  workflow_call:
+    inputs:
+      PGDATABASE:
+        required: true
+        description: PostgreSQL database name
+      PGHOST:
+        required: true
+        description: PostgreSQL host
+      PGPASSWORD:
+        required: true
+        description: PostgreSQL password
+      PGPORT:
+        required: true
+        description: PostgreSQL port
+      PGUSER:
+        required: true
+        description: PostgreSQL user
+      BACKUP_OPENSSL_PASSWORD:
+        required: true
+        description: Encryption password for the backup
+    secrets:
+      GITHUB_TOKEN: # This is required for artifact upload.
+        required: true
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    env:
+      POSTGRESQL_VERSION: 16
+
+    steps:
+      - name: Check Local pg_dump Version
+        run: |
+          pg_dump --version
+          openssl version
+
+      - name: Install PostgreSQL ${{ env.POSTGRESQL_VERSION }}
+        run: |
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+          sudo apt-get update
+          sudo apt-get -y install "postgresql-$POSTGRESQL_VERSION"
+
+      - name: Check Installed pg_dump Version
+        run: /usr/lib/postgresql/$POSTGRESQL_VERSION/bin/pg_dump --version
+
+      - name: Run pg_dump
+        run: /usr/lib/postgresql/$POSTGRESQL_VERSION/bin/pg_dump -U ${{ inputs.PGUSER }} -h ${{ inputs.PGHOST }} -p ${{ inputs.PGPORT }} -F t ${{ inputs.PGDATABASE }} > ./backup
+
+      - name: Encrypt Backup
+        run: openssl enc -aes-256-cbc -salt -in ./backup -out ./backup.enc -k ${{ inputs.BACKUP_OPENSSL_PASSWORD }}
+
+      - name: Clean Up
+        run: rm -rf ./backup
+
+      - name: Set Artifact Name
+        run: echo "ARTIFACT_NAME=backup-wedding-$(date -u +%Y-%m-%dT%H%M)" >> $GITHUB_ENV
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ./backup.enc
+          retention-days: 14
