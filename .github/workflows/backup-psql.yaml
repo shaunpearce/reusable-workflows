@@ -21,9 +21,6 @@ on:
       BACKUP_OPENSSL_PASSWORD:
         required: true
         description: Encryption password for the backup
-    secrets:
-      GITHUB_TOKEN: # This is required for artifact upload.
-        required: true
 
 jobs:
   backup:
