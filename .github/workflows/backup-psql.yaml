@@ -2,24 +2,18 @@ name: Backup PostgreSQL Database
 
 on:
   workflow_call:
-    inputs:
-      PGDATABASE:
-        required: true
-        description: PostgreSQL database name
-      PGHOST:
-        required: true
-        description: PostgreSQL host
-      PGPORT:
-        required: true
-        description: PostgreSQL port
-      PGUSER:
-        required: true
-        description: PostgreSQL user
-
     secrets:
       BACKUP_OPENSSL_PASSWORD:
         required: true
       PGPASSWORD:
+        required: true
+      PGDATABASE:
+        required: true
+      PGHOST:
+        required: true
+      PGPORT:
+        required: true
+      PGUSER:
         required: true
 
 jobs:
@@ -46,7 +40,7 @@ jobs:
         run: /usr/lib/postgresql/$POSTGRESQL_VERSION/bin/pg_dump --version
 
       - name: Run pg_dump
-        run: /usr/lib/postgresql/$POSTGRESQL_VERSION/bin/pg_dump -U ${{ inputs.PGUSER }} -h ${{ inputs.PGHOST }} -p ${{ inputs.PGPORT }} -F t ${{ inputs.PGDATABASE }} > ./backup
+        run: /usr/lib/postgresql/$POSTGRESQL_VERSION/bin/pg_dump -U ${{ secrets.PGUSER }} -h ${{ secrets.PGHOST }} -p ${{ secrets.PGPORT }} -F t ${{ secrets.PGDATABASE }} > ./backup
 
       - name: Encrypt Backup
         run: openssl enc -aes-256-cbc -salt -in ./backup -out ./backup.enc -k ${{ secrets.BACKUP_OPENSSL_PASSWORD }}
