@@ -1,5 +1,5 @@
-# backup-psql.yaml
 name: Backup PostgreSQL Database
+
 on:
   workflow_call:
     inputs:
