@@ -49,7 +49,7 @@ jobs:
         run: /usr/lib/postgresql/$POSTGRESQL_VERSION/bin/pg_dump -U ${{ inputs.PGUSER }} -h ${{ inputs.PGHOST }} -p ${{ inputs.PGPORT }} -F t ${{ inputs.PGDATABASE }} > ./backup
 
       - name: Encrypt Backup
-        run: openssl enc -aes-256-cbc -salt -in ./backup -out ./backup.enc -k ${{ inputs.BACKUP_OPENSSL_PASSWORD }}
+        run: openssl enc -aes-256-cbc -salt -in ./backup -out ./backup.enc -k ${{ secrets.BACKUP_OPENSSL_PASSWORD }}
 
       - name: Clean Up
         run: rm -rf ./backup
