@@ -22,6 +22,7 @@ jobs:
 
     env:
       POSTGRESQL_VERSION: 16
+      PGPASSWORD: ${{ secrets.PGPASSWORD }}
 
     steps:
       - name: Check Local pg_dump Version
@@ -49,7 +50,7 @@ jobs:
         run: rm -rf ./backup
 
       - name: Set Artifact Name
-        run: echo "ARTIFACT_NAME=backup-wedding-$(date -u +%Y-%m-%dT%H%M)" >> $GITHUB_ENV
+        run: echo "ARTIFACT_NAME=backup-$(date -u +%Y-%m-%dT%H%M)" >> $GITHUB_ENV
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
