@@ -9,18 +9,18 @@ on:
       PGHOST:
         required: true
         description: PostgreSQL host
-      PGPASSWORD:
-        required: true
-        description: PostgreSQL password
       PGPORT:
         required: true
         description: PostgreSQL port
       PGUSER:
         required: true
         description: PostgreSQL user
+
+    secrets:
       BACKUP_OPENSSL_PASSWORD:
         required: true
-        description: Encryption password for the backup
+      PGPASSWORD:
+        required: true
 
 jobs:
   backup:
