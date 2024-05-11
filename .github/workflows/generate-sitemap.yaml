@@ -22,6 +22,12 @@ jobs:
         with:
           path: frontend
 
+      - name: List directory contents
+        run: ls frontend
+
+      - name: List directory contents 2
+        run: ls
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
