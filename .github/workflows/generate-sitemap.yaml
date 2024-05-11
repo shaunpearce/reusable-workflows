@@ -15,7 +15,7 @@ concurrency:
 jobs:
   sitemap:
     runs-on: ubuntu-latest
-     defaults:
+    defaults:
       run:
         working-directory: frontend
 
