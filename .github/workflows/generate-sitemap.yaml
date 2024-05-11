@@ -19,8 +19,9 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          path: frontend
+
+      - name: Change working directory to frontend
+        run: cd frontend
 
       - name: List directory contents
         run: ls frontend
