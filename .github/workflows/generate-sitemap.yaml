@@ -1,0 +1,40 @@
+name: Audit
+
+on:
+  workflow_call:
+    secrets:
+      git_user_name:
+        required: true
+      git_user_email:
+        required: true
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sitemap:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18.x"
+
+      - run: npm install
+      - name: Build and Generate Sitemaps
+        run: npm run build
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+
+      - name: Commit Changes
+        run: |
+          git config user.name "shaunpearce"
+          git config user.email "me@shaunpearce.ie"
+          git add .
+          git commit -m "Run Lighthouse CI & Update Sitemap"
+          git push
