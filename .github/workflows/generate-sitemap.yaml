@@ -20,11 +20,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Change Directory to /frontend
-        run: cd ${{ github.workspace }}/frontend
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Change Directory to /frontend and Setup Node.js
+        run: |
+          cd ${{ github.workspace }}/frontend && actions/setup-node@v4
         with:
           node-version: "18.x"
 
