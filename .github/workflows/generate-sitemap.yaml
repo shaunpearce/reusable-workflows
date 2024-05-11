@@ -2,6 +2,11 @@ name: Audit
 
 on:
   workflow_call:
+    secrets:
+      GITHUB_USERNAME:
+        required: true
+      GITHUB_EMAIL:
+        required: true
 
 concurrency:
   group: ${{ github.ref }}
@@ -14,6 +19,9 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Change Directory to /frontend
+        run: cd frontend
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -28,8 +36,8 @@ jobs:
 
       - name: Commit Changes
         run: |
-          git config user.name "shaunpearce"
-          git config user.email "me@shaunpearce.ie"
+          git config user.name "${{ secrets.GITHUB_USERNAME }}"
+          git config user.email "${{ secrets.GITHUB_EMAIL }}"
           git add .
           git commit -m "Update Sitemap"
           git push
