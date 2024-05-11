@@ -31,5 +31,5 @@ jobs:
           git config user.name "shaunpearce"
           git config user.email "me@shaunpearce.ie"
           git add .
-          git commit -m "Run Lighthouse CI & Update Sitemap"
+          git commit -m "Update Sitemap"
           git push
