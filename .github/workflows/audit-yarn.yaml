@@ -1,0 +1,61 @@
+name: Audit
+
+on:
+  workflow_call:
+    secrets:
+      client_id:
+        required: true
+      tina_token:
+        required: true
+      git_user_name:
+        required: true
+      git_user_email:
+        required: true
+      website_url:
+        required: true
+
+env:
+  NEXT_PUBLIC_TINA_CLIENT_ID: ${{ secrets.client_id }}
+  TINA_TOKEN: ${{ secrets.tina_token }}
+  NEXT_PUBLIC_WEBSITE_URL: ${{ secrets.website_url }}
+  NEXT_PUBLIC_TINA_BRANCH: main
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18.x"
+
+      - run: yarn install
+      - name: Build and Generate Sitemaps
+        run: yarn run build
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+
+      - name: Install Dependencies
+        run: |
+          yarn install -g @unlighthouse/cli puppeteer
+          yarn install @unlighthouse/cli
+
+      - name: Run Lighthouse CI
+        run: |
+          unlighthouse-ci --site ${{ secrets.website_url }} --build-static
+
+      - name: Commit Changes
+        run: |
+          git config user.name "${{ secrets.git_user_name }}"
+          git config user.email "${{ secrets.git_user_email }}"
+          git add .
+          git commit -m "Run Lighthouse CI & Update Sitemap"
+          git push
