@@ -46,7 +46,7 @@ jobs:
       - name: Install Dependencies
         run: |
           yarn global add @unlighthouse/cli puppeteer
-          yarn install @unlighthouse/cli
+          yarn add @unlighthouse/cli
 
       - name: Run Lighthouse CI
         run: |
